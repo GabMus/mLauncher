@@ -1,22 +1,46 @@
 #!/usr/bin/env python
 from gi.repository import Gtk
 from gi.repository import GdkPixbuf
+import os
 from os import path as ospath
 from os import environ as osenviron
+from os import remove as osremove
+import stat
+from os import stat as osstat
+from os import chmod as oschmod
 
 
 builder = Gtk.Builder()
 builder.add_from_file("ui.glade")
-HOME=osenviron.get('HOME')
+HOME=os.environ.get('HOME')
 DEFAULT_SAVE_PATH=HOME+"/.local/share/applications/"
 
 class Handler:
 
 	iconPath="icon"
+	infobarButtonsActionCode=0
+	savePath=DEFAULT_SAVE_PATH+"default-mLauncher.desktop"
+	
 
 	def __init__(self):
 		self.updateRadios()
 		
+	def showInfo(self, message, buttons, buttonsAction=None):
+		buttonOk=builder.get_object("buttonInfobarOk")
+		buttonCancel=builder.get_object("buttonInfobarCancel")
+		infobar=builder.get_object("infobar")
+		labelInfobar=builder.get_object("labelInfobar")
+		if buttons:
+			buttonOk.show()
+			buttonCancel.show()
+			self.infobarButtonsActionCode=buttonsAction
+		else:
+			buttonOk.hide()
+			buttonCancel.hide()
+		labelInfobar.set_text(message)
+		infobar.show()
+		
+				
 	def updateRadios(self):
 		radio_iconName = builder.get_object("radiobuttonIconName")
 		radio_iconPath = builder.get_object("radiobuttonIconPath")
@@ -53,13 +77,10 @@ class Handler:
 		path=builder.get_object("entryPath").get_text().strip()
 		category=builder.get_object("comboboxtextCategory").get_active_text()
 		terminal=builder.get_object("switchTerminal").get_state()
-		infobar=builder.get_object("infobar")
-		label_infobar=builder.get_object("labelInfobar")
 		#check if the name contains nothing or only spaces
 		if name and executable:
-			if path and not ospath.isdir(path):
-				label_infobar.set_text("Your path is invalid! Clear or correct it!")
-				infobar.show()
+			if path and not os.path.isdir(path):
+				self.showInfo("Your path is invalid! Clear or correct it!", False)
 			else:
 				#build string
 				launcherString="[Desktop Entry]\n"
@@ -76,15 +97,21 @@ class Handler:
 					launcherString+="Path="+path+"\n"
 				launcherString+="Name="+name+"\n"
 				launcherString+="Icon="+self.iconPath
-				out_file = open(DEFAULT_SAVE_PATH+name+"-mLauncher.desktop","w")
-				out_file.write(launcherString)
-				out_file.close()
-				print("\n\nDebug:\n"+launcherString)
-				label_infobar.set_text("File saved in the default launchers path (~/.local/share/applications/)")
-				infobar.show()
+				self.savePath=DEFAULT_SAVE_PATH+name+"-mLauncher.desktop"
+				
+				if not os.path.isfile(self.savePath):
+					out_file = open(self.savePath,"w")
+					out_file.write(launcherString)
+					out_file.close()
+					st= os.stat(self.savePath)
+					os.chmod(self.savePath, st.st_mode | stat.S_IEXEC)
+					print("\n\nDebug:\n"+launcherString)
+					self.showInfo("File saved in the default launchers path (~/.local/share/applications/)", False)
+				else:
+					#the infobar has to replace and save
+					self.showInfo("The file "+self.savePath+" already exists. Do you want to replace it?", True, 1)
 		else:
-			label_infobar.set_text("Missing name and/or executable! Fix it!")
-			infobar.show()
+			self.showInfo("Missing name and/or executable! Fix it!", False)
 			
 	def scale_image(self, filename):
 		pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(filename, 48, 48)
@@ -118,6 +145,16 @@ class Handler:
 		
 	def on_buttonInfobarClose_clicked(self, infobar, closebutton):
 		infobar.hide()
+		
+	def on_buttonInfobarCancel_clicked(self, button):
+		builder.get_object("infobar").hide()
+		
+	def on_buttonInfobarOk_clicked(self, button):
+		if self.infobarButtonsActionCode == 1:
+			os.remove(self.savePath)
+			self.buttonSave_clicked_cb(button)
+		else:
+			print("Infobar action code was "+self.infobarButtonsActionCode+". Tell the programmer something's wrong!")
 
 builder.connect_signals(Handler())
 window = builder.get_object("window1")
