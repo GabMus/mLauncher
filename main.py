@@ -349,6 +349,7 @@ popover = Gtk.Popover.new(builder.get_object("buttonOpen"))
 popover.add(builder.get_object("openerWidget"))
 builder.connect_signals(Handler())
 window = builder.get_object("window1")
+window.set_wmclass("mLauncher", "mLauncher")
 window.show_all()
 
 Gtk.main()
