@@ -178,13 +178,15 @@ class Handler:
 		entry_exec=builder.get_object("entryExec")
 		execFileName=button.get_filename()
 		processedFileName=""
-		for i in execFileName:
+		i=0
+		while i<len(execFileName):
 			if execFileName[i] == " ":
 				processedFileName+="\\ "
 			elif execFileName[i] == "\\":
 				processedFileName+="\\\\"
 			else:
 				processedFileName+=execFileName[i]
+			i+=1
 		entry_exec.set_text(processedFileName)
 		
 	def on_filechooserbuttonPath_file_set(self, button):
