@@ -89,7 +89,6 @@ class Handler:
 				
 	def updateRadios(self):
 		radio_iconName = builder.get_object("radiobuttonIconName")
-		radio_iconPath = builder.get_object("radiobuttonIconPath")
 		entry_iconName = builder.get_object("entryIconName")
 		button_load = builder.get_object("buttonLoadIconByName")
 		filechooser_iconName = builder.get_object("filechooserbuttonIconPath")
