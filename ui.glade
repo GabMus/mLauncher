@@ -826,6 +826,49 @@ Author: Gabriele Musco
       </object>
     </child>
   </object>
+  <object class="GtkAboutDialog" id="aboutdialog">
+    <property name="can_focus">False</property>
+    <property name="type_hint">dialog</property>
+    <property name="attached_to">window1</property>
+    <property name="program_name">mLauncher</property>
+    <property name="version">Early development version</property>
+    <property name="copyright" translatable="yes">Copyright © 2015 Gabriele Musco</property>
+    <property name="comments" translatable="yes">A simple .desktop file creator for GNOME</property>
+    <property name="website">https://github.com/GabMus/mLauncher</property>
+    <property name="authors">Gabriele Musco</property>
+    <property name="logo_icon_name">gnome-panel-launcher</property>
+    <property name="license_type">gpl-3-0</property>
+    <child internal-child="vbox">
+      <object class="GtkBox" id="aboutdialog-vbox1">
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="aboutdialog-action_area1">
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+    <child type="titlebar">
+      <placeholder/>
+    </child>
+  </object>
   <object class="GtkBox" id="openerWidget">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
