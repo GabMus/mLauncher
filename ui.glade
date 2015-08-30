@@ -252,6 +252,7 @@ Author: Gabriele Musco
     <property name="can_focus">False</property>
     <property name="icon_name">gnome-panel-launcher</property>
     <property name="show_menubar">False</property>
+    <signal name="destroy" handler="onDeleteWindow" swapped="no"/>
     <child>
       <object class="GtkBox" id="boxContainer">
         <property name="visible">True</property>
@@ -621,9 +622,10 @@ Author: Gabriele Musco
               </packing>
             </child>
             <child>
-              <object class="GtkBox" id="box3">
+              <object class="GtkBox" id="box1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="spacing">6</property>
                 <child>
                   <object class="GtkImage" id="imageIcon">
                     <property name="width_request">64</property>
@@ -641,12 +643,12 @@ Author: Gabriele Musco
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkGrid" id="gridIcon">
+                  <object class="GtkBox" id="box2">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="row_spacing">5</property>
-                    <property name="row_homogeneous">True</property>
-                    <property name="column_homogeneous">True</property>
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">6</property>
+                    <property name="homogeneous">True</property>
                     <child>
                       <object class="GtkRadioButton" id="radiobuttonIconName">
                         <property name="label" translatable="yes">Icon by name</property>
@@ -660,8 +662,9 @@ Author: Gabriele Musco
                         <signal name="toggled" handler="on_radiobuttonIcon_group_changed" swapped="no"/>
                       </object>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">0</property>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
@@ -675,8 +678,36 @@ Author: Gabriele Musco
                         <property name="draw_indicator">True</property>
                       </object>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">1</property>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox" id="box4">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">6</property>
+                    <property name="homogeneous">True</property>
+                    <child>
+                      <object class="GtkEntry" id="entryIconName">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="valign">center</property>
+                        <signal name="changed" handler="on_entryIconName_insert_text" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
@@ -690,54 +721,16 @@ Author: Gabriele Musco
                         <signal name="file-set" handler="on_filechooserbuttonIcon_file_set" swapped="no"/>
                       </object>
                       <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkBox" id="boxIconName">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="spacing">6</property>
-                        <child>
-                          <object class="GtkEntry" id="entryIconName">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="valign">center</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="buttonLoadIconByName">
-                            <property name="label" translatable="yes">Load icon</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="valign">center</property>
-                            <property name="xalign">0.41999998688697815</property>
-                            <signal name="clicked" handler="on_buttonLoadIconByName_clicked" swapped="no"/>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">0</property>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                   </object>
                   <packing>
-                    <property name="expand">False</property>
+                    <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
               </object>

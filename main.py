@@ -90,22 +90,19 @@ class Handler:
 	def updateRadios(self):
 		radio_iconName = builder.get_object("radiobuttonIconName")
 		entry_iconName = builder.get_object("entryIconName")
-		button_load = builder.get_object("buttonLoadIconByName")
 		filechooser_iconName = builder.get_object("filechooserbuttonIconPath")
 		if radio_iconName.get_active():
 			entry_iconName.set_sensitive(True)
-			button_load.set_sensitive(True)
 			filechooser_iconName.set_sensitive(False)
 			builder.get_object("filechooserbuttonIconPath").unselect_all()
 		else:
 			entry_iconName.set_sensitive(False)
-			button_load.set_sensitive(False)
 			filechooser_iconName.set_sensitive(True)
 		builder.get_object("imageIcon").set_from_icon_name("gnome-panel-launcher", Gtk.IconSize.DIALOG)
 		self.iconPath="icon"
 		entry_iconName.set_text("")
 		
-	def on_buttonLoadIconByName_clicked(self, button):
+	def on_entryIconName_insert_text(self, entry):
 		iconName = builder.get_object("entryIconName").get_text().strip()
 		builder.get_object("imageIcon").set_from_icon_name(iconName, Gtk.IconSize.DIALOG)
 		self.iconPath=iconName
@@ -275,7 +272,6 @@ class Handler:
 						builder.get_object("radiobuttonIconName").set_active(True)
 						builder.get_object("entryIconName").set_text(mIcon)
 						#self.updateRadios()
-						self.on_buttonLoadIconByName_clicked(builder.get_object("buttonLoadIconByName"))
 					self.iconPath=mIcon
 					lines.pop(i)
 					skip[3]=True
