@@ -35,7 +35,7 @@ def refreshRecents():
 	desktop_recents_path = []
 	desktop_recents_name = []
 	while i<recents_count and len(desktop_recents_path) < 5:
-		if recents[i].get_uri()[-8:] == ".desktop" and recents[i].get_uri()[:7]=="file://":
+		if recents[i].get_uri()[-8:] == ".desktop" and recents[i].get_uri()[:7]=="file://" and os.path.isfile(recents[i].get_uri()[7:]):
 			desktop_recents_path.append(recents[i].get_uri()[7:])
 			desktop_recents_name.append(recents[i].get_display_name())
 		i+=1
