@@ -4,6 +4,7 @@ from gi.repository import GdkPixbuf
 import os
 import stat
 import sys
+import time
 
 
 builder = Gtk.Builder()
@@ -94,6 +95,14 @@ class App(Gtk.Application):
 		self.quit()
 
 
+def wait(time_lapse):
+	time_start = time.time()
+	time_end = (time_start + time_lapse)
+ 
+	while time_end > time.time():
+		while Gtk.events_pending():
+			Gtk.main_iteration()
+
 class Handler:
 
 	iconPath="icon"
@@ -105,7 +114,7 @@ class Handler:
 	def __init__(self):
 		self.updateRadios()
 		
-	def showInfo(self, message, buttons, buttonsAction=None):
+	def showInfo(self, message, buttons, reHide=False, buttonsAction=None):
 		buttonOk=builder.get_object("buttonInfobarOk")
 		buttonCancel=builder.get_object("buttonInfobarCancel")
 		infobar=builder.get_object("infobar")
@@ -119,6 +128,9 @@ class Handler:
 			buttonCancel.hide()
 		labelInfobar.set_text(message)
 		infobar.show()
+		if reHide:
+			wait(5)
+			infobar.hide()
 		
 				
 	def updateRadios(self):
@@ -156,7 +168,7 @@ class Handler:
 		#check if the name contains nothing or only spaces
 		if name and executable:
 			if path and not os.path.isdir(path):
-				self.showInfo("Your path is invalid! Clear or correct it!", False)
+				self.showInfo("Your path is invalid! Clear or correct it!", False, True)
 			else:
 				#build string
 				launcherString="[Desktop Entry]\n"
@@ -187,12 +199,12 @@ class Handler:
 					os.chmod(self.savePath, st.st_mode | stat.S_IEXEC)
 					recent_manager.add_item("file://"+self.savePath)
 					print("\n\nDebug:\n"+launcherString)
-					self.showInfo("File saved ("+self.savePath+")", False)
+					self.showInfo("File saved ("+self.savePath+")", False, True)
 				else:
 					#the infobar has to delete the file and recall this method
-					self.showInfo("The file "+self.savePath+" already exists. Do you want to replace it?", True, 1)
+					self.showInfo("The file "+self.savePath+" already exists. Do you want to replace it?", True, False, 1)
 		else:
-			self.showInfo("Missing name and/or executable! Fix it!", False)
+			self.showInfo("Missing name and/or executable! Fix it!", False, True)
 			
 	def scale_image(self, filename):
 		pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(filename, 48, 48)
@@ -322,7 +334,7 @@ class Handler:
 		except:
 			self.customSavePath= None
 			print("ERR: File not found")
-			self.showInfo("The file does not exist! Maybe you deleted it?", False)
+			self.showInfo("The file does not exist! Maybe you deleted it?", False, True)
 		popover.hide()
 									
 		
@@ -345,7 +357,7 @@ class Handler:
 		if dialog.get_filename()[-8:] == ".desktop":
 			self.processFile(dialog.get_filename())
 		else:
-			self.showInfo("The file selected is not valid. Look for one with a .desktop extension.", False)
+			self.showInfo("The file selected is not valid. Look for one with a .desktop extension.", False, True)
 		dialog.hide()
 	
 	
