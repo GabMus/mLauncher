@@ -15,4 +15,16 @@ You should have received a copy of the GNU General Public License along with thi
 
 Make sure to have Python3, PyGObject and Gtk>=3.16.
 
+Open a terminal and cd into the directory where you wan to put this app, then run
+
+`git clone https://github.com/GabMus/mLauncher/`
+  
+and you're done!
+
 To run mLauncher simply launch main.py (make sure it has execution permissions). It's important that both main.py and ui.glade are in the same directory.
+
+## Updating
+
+To update mLauncher, open a terminal into mLauncher folder and run
+
+`git pull`
