@@ -894,7 +894,6 @@ Author: Gabriele Musco
     <child>
       <object class="GtkButton" id="buttonOpenBrowse">
         <property name="label" translatable="yes">Browse...</property>
-        <property name="related_action"/>
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">True</property>

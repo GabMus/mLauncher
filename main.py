@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 from gi.repository import Gtk, Gio
+import gi
+gi.require_version("Gtk", "3.0")
 from gi.repository import GdkPixbuf
 import os
 import stat
