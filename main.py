@@ -167,6 +167,7 @@ class Handler:
 		path=builder.get_object("entryPath").get_text().strip()
 		category=builder.get_object("comboboxtext-entry").get_text()
 		terminal=builder.get_object("switchTerminal").get_state()
+		keywords=builder.get_object("entryKeywords").get_text().strip()
 		#check if the name contains nothing or only spaces
 		if name and executable:
 			if path and not os.path.isdir(path):
@@ -186,7 +187,8 @@ class Handler:
 				if path:
 					launcherString+="Path="+path+"\n"
 				launcherString+="Name="+name+"\n"
-				launcherString+="Icon="+self.iconPath
+				launcherString+="Icon="+self.iconPath+"\n"
+				launcherString+="Keywords="+keywords+"\n"
 				launcherString+=self.untouchableLines
 				if self.customSavePath:
 					self.savePath=self.customSavePath
@@ -277,12 +279,13 @@ class Handler:
 			path=builder.get_object("entryPath")
 			category=builder.get_object("comboboxtext-entry")
 			terminal=builder.get_object("switchTerminal")
+			keywords=builder.get_object("entryKeywords")
 		
 			self.resetUI()
 		
 			i=0
 			self.untouchableLines= "\n"
-			skip = [False, False, False, False, False, False]
+			skip = [False, False, False, False, False, False, False]
 			while len(lines)>0:
 				if lines[i].strip() == "[Desktop Entry]":
 					lines.pop(i)
@@ -331,11 +334,15 @@ class Handler:
 					category.set_text(lines[i].strip()[11:])
 					lines.pop(i)
 					skip[5]=True
+				elif lines[i].strip()[:9] == "Keywords=" and not skip[6]:
+					keywords.set_text(lines[i].strip()[9:])
+					lines.pop(i)
+					skip[6]=True
 				else:
 					self.untouchableLines+=lines.pop(i)
 		except:
 			self.customSavePath= None
-			print("ERR: File not found")
+			print("ERR: exception thrown")
 			self.showInfo("The file does not exist! Maybe you deleted it?", False, True)
 		popover.hide()
 									
