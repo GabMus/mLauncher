@@ -60,20 +60,24 @@ def refreshRecents():
 		row.add(box)
 		listbox_recents.add(row)
 		i+=1
-	
+
 refreshRecents()
 
 class App(Gtk.Application):
 	def __init__(self):
 		Gtk.Application.__init__(self, application_id="com.gabmus.mlauncher", flags=Gio.ApplicationFlags.FLAGS_NONE)
 
+
+		builder.get_object("aboutdialog").connect("delete-event", lambda *_: builder.get_object("aboutdialog").hide() or True)
 		self.connect("activate", self.activateCb)
-		
-		
+
+
+
+
 	def do_startup(self):
 	# start the application
 		Gtk.Application.do_startup(self)
-		
+
 	def activateCb(self, app):
 		window = builder.get_object("window1")
 		window.set_wmclass("mLauncher", "mLauncher")
@@ -89,10 +93,10 @@ class App(Gtk.Application):
 		app.add_action(quit_action)
 		app.set_app_menu(appMenu)
 		window.show_all()
-		
+
 	def on_about_activate(self, *agrs):
 		builder.get_object("aboutdialog").show()
-		
+
 	def on_quit_activate(self, *args):
 		self.quit()
 
@@ -100,7 +104,7 @@ class App(Gtk.Application):
 def wait(time_lapse):
 	time_start = time.time()
 	time_end = (time_start + time_lapse)
- 
+
 	while time_end > time.time():
 		while Gtk.events_pending():
 			Gtk.main_iteration()
@@ -115,7 +119,7 @@ class Handler:
 
 	def __init__(self):
 		self.updateRadios()
-		
+
 	def showInfo(self, message, buttons, reHide=False, buttonsAction=None):
 		buttonOk=builder.get_object("buttonInfobarOk")
 		buttonCancel=builder.get_object("buttonInfobarCancel")
@@ -133,8 +137,8 @@ class Handler:
 		if reHide:
 			wait(5)
 			infobar.hide()
-		
-				
+
+
 	def updateRadios(self):
 		radio_iconName = builder.get_object("radiobuttonIconName")
 		entry_iconName = builder.get_object("entryIconName")
@@ -149,15 +153,15 @@ class Handler:
 		builder.get_object("imageIcon").set_from_icon_name("gnome-panel-launcher", Gtk.IconSize.DIALOG)
 		self.iconPath="icon"
 		entry_iconName.set_text("")
-		
+
 	def on_entryIconName_insert_text(self, entry):
 		iconName = builder.get_object("entryIconName").get_text().strip()
 		builder.get_object("imageIcon").set_from_icon_name(iconName, Gtk.IconSize.DIALOG)
 		self.iconPath=iconName
-		
+
 	def on_radiobuttonIcon_group_changed(self, button):
 		self.updateRadios()
-	
+
 	def onDeleteWindow(self, *args):
 		Gtk.main_quit(*args)
 
@@ -194,7 +198,7 @@ class Handler:
 					self.savePath=self.customSavePath
 				else:
 					self.savePath=DEFAULT_SAVE_PATH+name+".desktop"
-				
+
 				if not os.path.isfile(self.savePath):
 					out_file = open(self.savePath,"w")
 					out_file.write(launcherString)
@@ -209,17 +213,17 @@ class Handler:
 					self.showInfo("The file "+self.savePath+" already exists. Do you want to replace it?", True, False, 1)
 		else:
 			self.showInfo("Missing name and/or executable! Fix it!", False, True)
-			
+
 	def scale_image(self, filename):
 		pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(filename, 48, 48)
 		return pixbuf
-			
+
 	def on_filechooserbuttonIcon_file_set(self, button):
 		imgObj=builder.get_object("imageIcon")
 		self.iconPath=button.get_filename()
 		pixbuf=self.scale_image(button.get_filename())
 		imgObj.set_from_pixbuf(pixbuf)
-			
+
 	def on_filechooserbuttonExecutable_file_set(self, button):
 		entry_exec=builder.get_object("entryExec")
 		execFileName=button.get_filename()
@@ -234,55 +238,55 @@ class Handler:
 				processedFileName+=execFileName[i]
 			i+=1
 		entry_exec.set_text(processedFileName)
-		
+
 	def on_filechooserbuttonPath_file_set(self, button):
 		entry_path=builder.get_object("entryPath")
 		pathFileName=button.get_filename()
 		entry_path.set_text(pathFileName)
-		
+
 	def on_buttonInfobarClose_clicked(self, infobar, closebutton):
 		infobar.hide()
-		
+
 	def on_buttonInfobarCancel_clicked(self, button):
 		builder.get_object("infobar").hide()
-		
+
 	def on_buttonInfobarOk_clicked(self, button):
 		if self.infobarButtonsActionCode == 1:
 			os.remove(self.savePath)
 			self.buttonSave_clicked_cb(button)
 		else:
 			print("Infobar action code was "+self.infobarButtonsActionCode+". Tell the programmer something's wrong!")
-			
+
 	def on_buttonOpen_clicked(self, button):
 		if popover.get_visible():
 			popover.hide()
 		else:
 			refreshRecents()
 			popover.show_all()
-			
+
 	def resetUI(self):
 		builder.get_object("entryName").set_text("")
 		builder.get_object("entryExec").set_text("")
 		builder.get_object("entryPath").set_text("")
 		builder.get_object("comboboxtext-entry").set_text("")
 		builder.get_object("switchTerminal").set_state(False)
-			
+
 	def processFile(self, path):
 		try:
 			with open(path) as f:
 				lines = f.readlines()
-		
+
 			self.customSavePath=path
-		
+
 			name=builder.get_object("entryName")
 			executable=builder.get_object("entryExec")
 			path=builder.get_object("entryPath")
 			category=builder.get_object("comboboxtext-entry")
 			terminal=builder.get_object("switchTerminal")
 			keywords=builder.get_object("entryKeywords")
-		
+
 			self.resetUI()
-		
+
 			i=0
 			self.untouchableLines= "\n"
 			skip = [False, False, False, False, False, False, False]
@@ -345,47 +349,47 @@ class Handler:
 			print("ERR: exception thrown")
 			self.showInfo("The file does not exist! Maybe you deleted it?", False, True)
 		popover.hide()
-									
-		
-			
+
+
+
 	def on_listboxRecents_row_activated(self, listbox, row):
 		selectedFilePath=row.get_children()[0].get_children()[1].get_text()
 		self.processFile(selectedFilePath)
-		
+
 	def on_buttonOpenBrowse_clicked(self, button):
 		builder.get_object("filechooserdialogOpenBrowse").set_current_folder_uri("file://"+HOME)
 		builder.get_object("filechooserdialogOpenBrowse").show_all()
 		popover.hide()
-		
-	
+
+
 	def on_buttonDesktopChooserOk_clicked(self, button):
 		self.on_filechooserdialogOpenBrowse_file_activated(builder.get_object("filechooserdialogOpenBrowse"))
-		
-		
+
+
 	def on_filechooserdialogOpenBrowse_file_activated(self, dialog):
 		if dialog.get_filename()[-8:] == ".desktop":
 			self.processFile(dialog.get_filename())
 		else:
 			self.showInfo("The file selected is not valid. Look for one with a .desktop extension.", False, True)
 		dialog.hide()
-	
-	
+
+
 	def on_buttonDesktopChooserCancel_clicked(self, button):
 		builder.get_object("filechooserdialogOpenBrowse").hide()
-	
+
 	def on_buttonSaveAsChooserCancel_clicked(self, button):
 		builder.get_object("filechooserdialogSaveAs").hide()
-	
+
 	def on_buttonDesktopChooserOpenDefaultFolder_clicked(self, button):
 		builder.get_object("filechooserdialogOpenBrowse").set_current_folder_uri("file://"+HOME+"/.local/share/applications")
-		
+
 	def on_buttonSaveAsChooserOpenDefaultFolder_clicked(self, button):
 		builder.get_object("filechooserdialogSaveAs").set_current_folder_uri("file://"+HOME+"/.local/share/applications")
-		
+
 	def on_buttonSaveAs_clicked(self, button):
 		builder.get_object("filechooserdialogSaveAs").set_current_folder_uri("file://"+HOME)
 		builder.get_object("filechooserdialogSaveAs").show_all()
-		
+
 	def on_buttonSaveAsChooserOk_clicked(self, button):
 		path=builder.get_object("filechooserdialogSaveAs").get_filename()
 		if path[-8:] != ".desktop":
@@ -393,9 +397,9 @@ class Handler:
 		self.customSavePath=path
 		builder.get_object("filechooserdialogSaveAs").hide()
 		self.buttonSave_clicked_cb(button)
-		
-			
-			
+
+
+
 
 popover = Gtk.Popover.new(builder.get_object("buttonOpen"))
 popover.add(builder.get_object("openerWidget"))
