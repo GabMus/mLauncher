@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Categories=Utility
+Terminal=false
+Exec=/usr/share/mlauncher/main.py
+Name=mlauncher
+Icon=/usr/share/mlauncher/icon.svg
