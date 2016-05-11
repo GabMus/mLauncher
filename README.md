@@ -21,7 +21,7 @@ Make your own custom launcher!
 
 ### Arch Linux
 
-mLauncher is available on **AUR**
+mLauncher is available on **AUR** via the `mlauncher-git` package.
 
 ### Other distros
 
