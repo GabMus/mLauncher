@@ -10,7 +10,7 @@ import time
 
 
 builder = Gtk.Builder()
-builder.add_from_file("ui.glade")
+builder.add_from_file(os.path.realpath(os.path.dirname(__file__))+"/ui.glade")
 HOME=os.environ.get('HOME')
 DEFAULT_SAVE_PATH=HOME+"/.local/share/applications/"
 
